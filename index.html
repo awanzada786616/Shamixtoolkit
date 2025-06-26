@@ -1,87 +1,315 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SHANIXWASI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shami 118 Toolkit </title>
   <style>
-    body {
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      background: #0f0f0f;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      text-align: center;
+      overflow-y: auto; /* Enable scrolling */
+      background: black;
+    }
+
+    canvas#matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .login, .main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .login {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      background: linear-gradient(to bottom right, #000, #1a1a1a);
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
     }
 
-    h1 {
-      font-size: 3em;
-      color: gold;
-      margin-bottom: 10px;
+    .login h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
     }
 
-    p {
-      font-size: 1.2em;
-      max-width: 600px;
-      margin-bottom: 30px;
-      line-height: 1.5;
-    }
-
-    .download-btn {
-      background: gold;
-      color: #000;
-      padding: 15px 30px;
-      font-size: 18px;
+    .login input {
+      margin: 10px;
+      padding: 12px;
+      border-radius: 8px;
       border: none;
-      border-radius: 30px;
+      width: 220px;
+      font-size: 16px;
+    }
+
+    .login button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      background-color: #00c851;
+      color: white;
+      font-size: 18px;
       cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .login button:hover {
+      background-color: #009444;
+    }
+
+    .main {
+      display: none;
+      padding: 20px;
+    }
+
+    .logo {
+      margin-top: 20px;
+    }
+
+    .logo img {
+      width: 180px;
+      border-radius: 12px;
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      justify-items: center;
+      padding: 30px 10px;
+    }
+
+    @media (max-width: 768px) {
+      .tools {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tools {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tool {
       text-decoration: none;
-      transition: 0.3s ease;
-      box-shadow: 0 0 15px gold;
+      color: white;
+      animation: bounce 2s infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 12px;
+      transition: transform 0.2s;
     }
 
-    .download-btn:hover {
-      background: #ffcc00;
-      box-shadow: 0 0 25px gold;
+    .tool:hover {
+      transform: scale(1.05);
     }
 
-    .whatsapp-float {
+    .tool img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      margin-bottom: 8px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .whatsapp {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: #25d366;
+      background-color: #25D366;
       color: white;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      border-radius: 50px;
+      padding: 12px 20px;
       text-decoration: none;
-      box-shadow: 0 0 10px #25d366;
-      z-index: 100;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      z-index: 2;
     }
 
-    .whatsapp-float img {
-      width: 30px;
-      height: 30px;
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
-  <h1>SHANIXWASI</h1>
-  <p>🚀 It's a TikTok video downloader with high quality, faster service, and without watermark. Paste your video link and click download!</p>
-  <a href="https://ssstik.io/" target="_blank" class="download-btn">Download Video</a>
 
-  <a class="whatsapp-float" href="https://wa.me/923317660941" target="_blank" title="Chat on WhatsApp">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"/>
-  </a>
+<canvas id="matrix"></canvas>
+
+<!-- Login Section -->
+<div class="login">
+  <h2>Login to Shami toolkit</h2>
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- Main Tools Section -->
+<div class="main">
+  <div class="logo">
+    <img src="https://i.postimg.cc/VsxQz6Hq/20250626-191844.png" alt="Shami tools" />
+  </div>
+  <div class="tools">
+  <a class="tool" href="https://zefoy.com" target="_blank">
+        <img src="https://i.postimg.cc/vBQB0vXQ/images-1-1.jpg" alt="TikTok Views" />
+        TikTok Views
+      </a>
+      <a class="tool" href="https://famofc-tool.vercel.app/script12/camerahk.html" target="_blank">
+        <img src="https://i.postimg.cc/wMR1SQyn/download-4.jpg" alt="Camera Crack" />
+        Camera Crack
+      </a>
+      <a class="tool" href="https://temp-mail.org/en/" target="_blank">
+        <img src="https://i.postimg.cc/sfZWv31y/download-6.jpg" alt="Temp Mail" />
+        Temp Mail
+      </a>
+      <a class="tool" href="https://famofc-tool.vercel.app/script12/cardbin.html" target="_blank">
+        <img src="https://i.postimg.cc/YqSQMZTB/download-5.png" alt="BIN Card" />
+        BIN Card
+      </a>
+      <a class="tool" href="https://famofc-tool.vercel.app/script12/fakess.html" target="_blank">
+        <img src="https://i.postimg.cc/CLT83dYX/images-13.png" alt="Jazz Fake SS" />
+        Jazz Fake SS
+      </a>
+      <a class="tool" href="https://simownerdetails.net.pk/" target="_blank">
+        <img src="https://i.postimg.cc/YqNw3DbZ/images-1-2.jpg" alt="Number Data" />
+        Number Data
+      </a>
+      <a class="tool" href="https://wasixstore.vercel.app" target="_blank">
+        <img src="https://i.postimg.cc/8Pg7c370/images-18.jpg" alt="UK Sim Buy" />
+        UK Sim Buy
+      </a>
+      <a class="tool" href="https://vrcentpunjab.com" target="_blank">
+        <img src="https://i.postimg.cc/rwsjF61X/download-7.png" alt="Vehicle Details" />
+        Vehicle Details
+      </a>
+      <a class="tool" href="https://gmailcheck.com/" target="_blank">
+        <img src="https://i.postimg.cc/28kRG6DQ/download-7.jpg" alt="Gmail Check" />
+        Gmail Check
+      </a>
+      <a class="tool" href="https://minahilsimtracker.com/" target="_blank">
+        <img src="https://i.postimg.cc/YqNw3DbZ/images-1-2.jpg" alt="Fresh Sim Data" />
+        Fresh Sim Data
+      </a>
+      <a class="tool" href="https://receive-sms.cc/US-Phone-Number/18575296855" target="_blank">
+        <img src="https://i.postimg.cc/fRH8sz1h/images-14.png" alt="Virtual Whatsapp" />
+        Virtual Whatsapp
+      </a>
+      <a class="tool" href="https://ip-info-tool-seven.vercel.app/" target="_blank">
+        <img src="https://i.postimg.cc/NMp5yKBV/images-15.png" alt="ip details" />
+        IP Details
+      </a>
+      <a class="tool" href="https://wasi-bot.vercel.app/" target="_blank">
+        <img src="https://i.postimg.cc/wTXdrd4s/download-19.jpg" alt="sindh krydari check" />
+        sindh karydari
+      </a>
+        <a class="tool" href="https://qtp.gob.pk/driving" target="_blank">
+        <img src="https://i.postimg.cc/Hx9qVb8m/download-10.png" alt="Balochistan license" />
+        Balochistan license 
+      </a>
+        <a class="tool" href="https://dlims.punjab.gov.pk/elicense" target="_blank">
+        <img src="https://i.postimg.cc/hPd0scMz/download-13.png" alt="DLIMS" />
+        DLIMS
+      </a>
+          <a class="tool" href="https://ptpkp.gov.pk/driving-license-verification/" target="_blank">
+        <img src="https://i.postimg.cc/NGWnBNzX/download-20.jpg" alt="kpk driving license" />
+        kpk driving license 
+      </a>
+      <a class="tool" href="https://xmod.top/p/alaar-tools-hghh" target="_blank">
+        <img src="https://i.postimg.cc/FHyprqVt/download-15.png" alt="HRMIS LOGIN" />
+        HRMIS LOGIN
+      </a>
+      <a class="tool" href="https://ccms.pitc.com.pk/complaint" target="_blank">
+        <img src="https://i.postimg.cc/ZnN7rqpn/download-16.png" alt="CCMS" />
+        CCMS
+    </a>
+    <!-- Add the rest of your tool links here (as in original) -->
+  </div>
+
+  <a class="whatsapp" href="https://wa.me/+923415594054" target="_blank">WhatsApp</a>
+  <footer>
+    All Rights Reserved © Ahtisham hacker 
+  </footer>
+</div>
+
+<script>
+  // Matrix animation
+  const canvas = document.getElementById("matrix");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  resizeCanvas();
+
+  const letters = "01";
+  const fontSize = 14;
+  let columns = Math.floor(canvas.width / fontSize);
+  const drops = Array(columns).fill(1);
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#0f0";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 33);
+
+  // Resize canvas on window resize
+  window.addEventListener("resize", () => {
+    resizeCanvas();
+    columns = Math.floor(canvas.width / fontSize);
+  });
+
+  // Login Function
+  function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    if (username === "shami" && password === "shami786") {
+      document.querySelector(".login").style.display = "none";
+      document.querySelector(".main").style.display = "block";
+    } else {
+      alert("Incorrect credentials");
+    }
+  }
+</script>
+
 </body>
 </html>
